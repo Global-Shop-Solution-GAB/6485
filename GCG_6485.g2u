@@ -1,0 +1,573 @@
+﻿Program.Sub.ScreenSU.Start
+Gui.FormLabel..Create(BaseForm)
+Gui.FormLabel..Caption("Purple Tag Label Form")
+Gui.FormLabel..Size(820,555)
+Gui.FormLabel..MinX(0)
+Gui.FormLabel..MinY(0)
+Gui.FormLabel..Position(0,0)
+Gui.FormLabel..AlwaysOnTop(False)
+Gui.FormLabel..FontName("Tahoma")
+Gui.FormLabel..FontSize(8.25)
+Gui.FormLabel..ControlBox(True)
+Gui.FormLabel..MaxButton(True)
+Gui.FormLabel..MinButton(True)
+Gui.FormLabel..MousePointer(0)
+Gui.FormLabel..Moveable(True)
+Gui.FormLabel..Sizeable(True)
+Gui.FormLabel..ShowInTaskBar(True)
+Gui.FormLabel..TitleBar(True)
+Gui.FormLabel..Event(UnLoad,FormLabel_UnLoad)
+Gui.FormLabel.cboOptions.Create(ComboBox)
+Gui.FormLabel.cboOptions.Enabled(True)
+Gui.FormLabel.cboOptions.Visible(True)
+Gui.FormLabel.cboOptions.Zorder(0)
+Gui.FormLabel.cboOptions.Size(410,20)
+Gui.FormLabel.cboOptions.Position(16,75)
+Gui.FormLabel.cboOptions.FontName("Tahoma")
+Gui.FormLabel.cboOptions.FontSize(8.25)
+Gui.FormLabel.gsgcLabel.Create(GsGridControl)
+Gui.FormLabel.gsgcLabel.Enabled(True)
+Gui.FormLabel.gsgcLabel.Visible(True)
+Gui.FormLabel.gsgcLabel.Zorder(0)
+Gui.FormLabel.gsgcLabel.Size(789,338)
+Gui.FormLabel.gsgcLabel.Position(16,119)
+Gui.FormLabel.gsgcLabel.Event(CellValueChanged,gsgcLabel_CellValueChanged)
+Gui.FormLabel.cmdReset.Create(Button)
+Gui.FormLabel.cmdReset.Enabled(True)
+Gui.FormLabel.cmdReset.Visible(True)
+Gui.FormLabel.cmdReset.Zorder(0)
+Gui.FormLabel.cmdReset.Size(75,23)
+Gui.FormLabel.cmdReset.Position(538,480)
+Gui.FormLabel.cmdReset.Caption("Reset")
+Gui.FormLabel.cmdReset.FontName("Tahoma")
+Gui.FormLabel.cmdReset.FontSize(8.25)
+Gui.FormLabel.cmdReset.Event(Click,cmdReset_Click)
+Gui.FormLabel.cmdReset.SvgPicture("icon_clear_color")
+Gui.FormLabel.cmdPrint.Create(Button)
+Gui.FormLabel.cmdPrint.Enabled(True)
+Gui.FormLabel.cmdPrint.Visible(True)
+Gui.FormLabel.cmdPrint.Zorder(0)
+Gui.FormLabel.cmdPrint.Size(75,23)
+Gui.FormLabel.cmdPrint.Position(354,480)
+Gui.FormLabel.cmdPrint.Caption("Print")
+Gui.FormLabel.cmdPrint.FontName("Tahoma")
+Gui.FormLabel.cmdPrint.FontSize(8.25)
+Gui.FormLabel.cmdPrint.Event(Click,cmdPrint_Click)
+Gui.FormLabel.cmdPrint.SvgPicture("icon_printer_color")
+Gui.FormLabel.cmdCancel.Create(Button)
+Gui.FormLabel.cmdCancel.Enabled(True)
+Gui.FormLabel.cmdCancel.Visible(True)
+Gui.FormLabel.cmdCancel.Zorder(0)
+Gui.FormLabel.cmdCancel.Size(75,23)
+Gui.FormLabel.cmdCancel.Position(701,480)
+Gui.FormLabel.cmdCancel.Caption("Cancel")
+Gui.FormLabel.cmdCancel.FontName("Tahoma")
+Gui.FormLabel.cmdCancel.FontSize(8.25)
+Gui.FormLabel.cmdCancel.Event(Click,cmdCancel_Click)
+Gui.FormLabel.cmdCancel.SvgPicture("icon_delete_color")
+Gui.FormLabel.lbl1.Create(Label,"Number of Copies",True,85,13,0,38,486,True,0,"Tahoma",8.25,,0,0)
+Gui.FormLabel.lbl1.BorderStyle(0)
+Gui.FormLabel.txtCopies.Create(TextBox,"",True,100,20,0,136,482,True,0,"Tahoma",8.25,,1)
+Gui.FormLabel.txtTotal.Create(TextBox,"",True,100,20,0,512,74,True,0,"Tahoma",8.25,,1)
+Gui.FormLabel.lbl2.Create(Label,"Total Number",True,64,13,0,514,57,True,0,"Tahoma",8.25,,0,0)
+Gui.FormLabel.lbl2.BorderStyle(0)
+Gui.FormLabel.cmdApply.Create(Button)
+Gui.FormLabel.cmdApply.Enabled(True)
+Gui.FormLabel.cmdApply.Visible(True)
+Gui.FormLabel.cmdApply.Zorder(0)
+Gui.FormLabel.cmdApply.Size(75,23)
+Gui.FormLabel.cmdApply.Position(624,72)
+Gui.FormLabel.cmdApply.Caption("Apply")
+Gui.FormLabel.cmdApply.FontName("Tahoma")
+Gui.FormLabel.cmdApply.FontSize(8.25)
+Gui.FormLabel.cmdApply.Event(Click,cmdApply_Click)
+Gui.FormLabel.cmdApply.SvgPicture("icon_add_color")
+Gui.FormLabel.lbl3.Create(Label,"Work Order",True,56,13,0,16,24,True,0,"Tahoma",8.25,,0,0)
+Gui.FormLabel.lbl3.BorderStyle(0)
+Gui.FormLabel.txtWO.Create(TextBox,"",True,165,20,0,92,20,False,0,"Tahoma",8.25,,1)
+Program.Sub.ScreenSU.End
+
+Program.Sub.Preflight.Start
+V.Global.sCustName.Declare(String)
+V.Global.sCustPO.Declare(String)
+V.Global.iMainCounter.Declare(Long, 0)
+V.Global.sError.Declare(String)
+V.Global.sCustomerNumber.Declare(String)
+
+Program.Sub.Preflight.End
+Program.Sub.Main.Start
+'Author: Arturo Almaguer
+'Date: September 10th 2021
+'Customer: Advanced Heat Treat Corp, quote number 12894
+'This program prints WO labels from the GUI
+
+Function.Intrinsic.UI.UsePixels ' Allows you to use Pixels instead of Twips throughout
+
+F.Intrinsic.Control.Try
+
+	F.Intrinsic.Control.SelectCase(V.Caller.Hook)
+		
+		F.Intrinsic.Control.Case(15790)
+			'Changing Script 1 button caption
+			V.Passed.000048.Set("Purple Tag Label")
+		
+		F.Intrinsic.Control.Case(15832)
+			'Script 1 button hook after user clocks in and the grid shows all the WOs the user is assigned to
+			F.Intrinsic.Control.CallSub("GetWO")
+		
+		F.Intrinsic.Control.Case(15780)
+			'General Script 3 button in the bottom left corner of the GUI
+			F.Intrinsic.Control.If(V.Passed.000025, =, "All Jobs")
+				'Run program only if user is on WO screen in the GUI
+				F.Intrinsic.Control.CallSub("IndividualWO")
+			F.Intrinsic.Control.EndIf
+		
+		F.Intrinsic.Control.Case(15710)
+			'Changing General Script 3 button caption
+			V.Passed.000021.Set("Purple Tag")
+			
+	F.Intrinsic.Control.EndSelect
+
+F.Intrinsic.Control.Catch
+
+	F.Intrinsic.Control.CallSub(CatchError)
+	
+F.Intrinsic.Control.EndTry
+
+Program.Sub.Main.End
+Program.Sub.cmdApply_Click.Start
+'Creating data 
+F.Intrinsic.Control.Try
+
+	V.Local.iCounter.Declare(Long)
+	V.Local.iTotal.Declare(Long)
+	V.Local.iID.Declare(Long)
+	V.Local.iLastRow.Declare(Long)
+	
+	F.Intrinsic.Control.If(V.DataTable.dtLabel.Exists)
+		F.Data.DataTable.Close("dtLabel")
+	F.Intrinsic.Control.EndIf
+	
+	'Creating dt
+	F.Data.DataTable.Create("dtLabel", True)
+	
+	'Adding columns
+	F.Data.DataTable.AddColumn("dtLabel", "COUNTER", "String")
+	F.Data.DataTable.AddColumn("dtLabel", "TOTAL", "String")
+	F.Data.DataTable.AddColumn("dtLabel", "QTY_PER_BOX", "String")
+	F.Data.DataTable.AddColumn("dtLabel", "WEIGHT", "String")
+	F.Data.DataTable.AddColumn("dtLabel", "COMMENTS", "String")
+	
+	'Adding invisible columns that will be used later
+	F.Data.DataTable.AddColumn("dtLabel", "WO", "String")
+	F.Data.DataTable.AddColumn("dtLabel", "CUSTOMER_NAME", "String")
+	F.Data.DataTable.AddColumn("dtLabel", "CUSTOMER_PO", "String")
+	F.Data.DataTable.AddColumn("dtLabel", "CUSTOMER_PART", "String")
+	F.Data.DataTable.AddColumn("dtLabel", "FLEX_SCHEDULE", "String")
+	F.Data.DataTable.AddColumn("dtLabel", "LABEL_COPY", "String")	
+		
+	V.Local.iTotal.Set(V.Screen.FormLabel!txtTotal.Text)
+	F.Intrinsic.Math.Sub(V.Local.iTotal, 1, V.Local.iLastRow)
+	
+	'Looping through dt to add row data
+	F.Intrinsic.Control.For(V.Local.iCounter, 0, V.Local.iLastRow, 1)
+		F.Intrinsic.Math.Add(V.Local.iCounter, 1, V.Local.iID)
+		F.Data.DataTable.AddRow("dtLabel", "COUNTER", V.Local.iID, "TOTAL", V.Local.iTotal, "QTY_PER_BOX", , "WEIGHT", , "COMMENTS", )
+	F.Intrinsic.Control.Next(V.Local.iCounter)
+	
+	'Calling sub to format grid
+	F.Intrinsic.Control.CallSub("LoadGrid")
+
+F.Intrinsic.Control.Catch
+
+	F.Intrinsic.Control.CallSub(CatchError)
+	
+F.Intrinsic.Control.EndTry
+
+Program.Sub.cmdApply_Click.End
+Program.Sub.LoadGrid.Start
+'Setting grid properties
+F.Intrinsic.Control.Try
+
+	GUI.FormLabel.gsgcLabel.AddGridviewFromDatatable("gvLabel", "dtLabel")
+	
+	''Gridview properties
+	GUI.FormLabel.gsgcLabel.SetGridviewProperty("gvLabel", V.Enum.GridViewPropertyNames!EnableAppearanceOddRow, True)
+	GUI.FormLabel.gsgcLabel.SetGridviewProperty("gvLabel", V.Enum.GridViewPropertyNames!RowAutoHeight, True)
+	GUI.FormLabel.gsgcLabel.SetGridviewProperty("gvLabel", V.Enum.GridViewPropertyNames!ColumnPanelRowHeight, 45)
+	GUI.FormLabel.gsgcLabel.SetGridviewProperty("gvLabel", V.Enum.GridViewPropertyNames!EnableAppearanceFocusedRow, True) 
+	GUI.FormLabel.gsgcLabel.SetGridviewProperty("gvLabel", "OptionsViewColumnAutoWidth", False) 'It allows the user to adjust the column widths
+	
+	''Column properties
+	
+	'Invisible columns
+	GUI.FormLabel.gsgcLabel.SetColumnProperty("gvLabel", "WO", V.Enum.ColumnPropertyNames!Visible, False)
+	GUI.FormLabel.gsgcLabel.SetColumnProperty("gvLabel", "CUSTOMER_NAME", V.Enum.ColumnPropertyNames!Visible, False)
+	GUI.FormLabel.gsgcLabel.SetColumnProperty("gvLabel", "CUSTOMER_PO", V.Enum.ColumnPropertyNames!Visible, False)
+	GUI.FormLabel.gsgcLabel.SetColumnProperty("gvLabel", "CUSTOMER_PART", V.Enum.ColumnPropertyNames!Visible, False)
+	GUI.FormLabel.gsgcLabel.SetColumnProperty("gvLabel", "FLEX_SCHEDULE", V.Enum.ColumnPropertyNames!Visible, False)
+	GUI.FormLabel.gsgcLabel.SetColumnProperty("gvLabel", "LABEL_COPY", V.Enum.ColumnPropertyNames!Visible, False)
+	
+	'Formatting captions
+	GUI.FormLabel.gsgcLabel.SetColumnProperty("gvLabel", "COUNTER", V.Enum.ColumnPropertyNames!Caption, "Number")
+	GUI.FormLabel.gsgcLabel.SetColumnProperty("gvLabel", "TOTAL", V.Enum.ColumnPropertyNames!Caption, "Total")
+	GUI.FormLabel.gsgcLabel.SetColumnProperty("gvLabel", "QTY_PER_BOX", V.Enum.ColumnPropertyNames!Caption, "Quantity per Box")
+	GUI.FormLabel.gsgcLabel.SetColumnProperty("gvLabel", "WEIGHT", V.Enum.ColumnPropertyNames!Caption, "Weight")
+	GUI.FormLabel.gsgcLabel.SetColumnProperty("gvLabel", "COMMENTS", V.Enum.ColumnPropertyNames!Caption, "Comments")
+	
+	'Formatting headers
+	GUI.FormLabel.gsgcLabel.SetColumnProperty("gvLabel", "COUNTER", V.Enum.ColumnPropertyNames!HeaderFontBold, True)
+	GUI.FormLabel.gsgcLabel.SetColumnProperty("gvLabel", "TOTAL", V.Enum.ColumnPropertyNames!HeaderFontBold, True)
+	GUI.FormLabel.gsgcLabel.SetColumnProperty("gvLabel", "QTY_PER_BOX", V.Enum.ColumnPropertyNames!HeaderFontBold, True)
+	GUI.FormLabel.gsgcLabel.SetColumnProperty("gvLabel", "WEIGHT", V.Enum.ColumnPropertyNames!HeaderFontBold, True)
+	GUI.FormLabel.gsgcLabel.SetColumnProperty("gvLabel", "COMMENTS", V.Enum.ColumnPropertyNames!HeaderFontBold, True)
+	
+	'Formatting headers allignment
+	GUI.FormLabel.gsgcLabel.SetColumnProperty("gvLabel", "COUNTER", V.Enum.ColumnPropertyNames!HeaderHAlignment, "Center")
+	GUI.FormLabel.gsgcLabel.SetColumnProperty("gvLabel", "TOTAL", V.Enum.ColumnPropertyNames!HeaderHAlignment, "Center")
+	GUI.FormLabel.gsgcLabel.SetColumnProperty("gvLabel", "QTY_PER_BOX", V.Enum.ColumnPropertyNames!HeaderHAlignment, "Center")
+	GUI.FormLabel.gsgcLabel.SetColumnProperty("gvLabel", "WEIGHT", V.Enum.ColumnPropertyNames!HeaderHAlignment, "Center")
+	GUI.FormLabel.gsgcLabel.SetColumnProperty("gvLabel", "COMMENTS", V.Enum.ColumnPropertyNames!HeaderHAlignment, "Center")
+	
+	'Formatting widths
+	GUI.FormLabel.gsgcLabel.SetColumnProperty("gvLabel", "COUNTER", V.Enum.ColumnPropertyNames!MinWidth, 80)
+	GUI.FormLabel.gsgcLabel.SetColumnProperty("gvLabel", "TOTAL", V.Enum.ColumnPropertyNames!MinWidth, 80)
+	GUI.FormLabel.gsgcLabel.SetColumnProperty("gvLabel", "QTY_PER_BOX", V.Enum.ColumnPropertyNames!MinWidth, 150)
+	GUI.FormLabel.gsgcLabel.SetColumnProperty("gvLabel", "WEIGHT", V.Enum.ColumnPropertyNames!MinWidth, 100)
+	GUI.FormLabel.gsgcLabel.SetColumnProperty("gvLabel", "COMMENTS", V.Enum.ColumnPropertyNames!MinWidth, 300)
+	
+	'Allowing Edit
+	GUI.FormLabel.gsgcLabel.SetColumnProperty("gvLabel", "COUNTER", V.Enum.ColumnPropertyNames!AllowEdit, False)
+	GUI.FormLabel.gsgcLabel.SetColumnProperty("gvLabel", "TOTAL", V.Enum.ColumnPropertyNames!AllowEdit, False)
+	GUI.FormLabel.gsgcLabel.SetColumnProperty("gvLabel", "QTY_PER_BOX", V.Enum.ColumnPropertyNames!AllowEdit, True)
+	GUI.FormLabel.gsgcLabel.SetColumnProperty("gvLabel", "WEIGHT", V.Enum.ColumnPropertyNames!AllowEdit, True)
+	GUI.FormLabel.gsgcLabel.SetColumnProperty("gvLabel", "COMMENTS", V.Enum.ColumnPropertyNames!AllowEdit, True)
+	
+	'Read Only
+	GUI.FormLabel.gsgcLabel.SetColumnProperty("gvLabel", "COUNTER", V.Enum.ColumnPropertyNames!ReadOnly, True)
+	GUI.FormLabel.gsgcLabel.SetColumnProperty("gvLabel", "TOTAL", V.Enum.ColumnPropertyNames!ReadOnly, True)
+	GUI.FormLabel.gsgcLabel.SetColumnProperty("gvLabel", "QTY_PER_BOX", V.Enum.ColumnPropertyNames!ReadOnly, False)
+	GUI.FormLabel.gsgcLabel.SetColumnProperty("gvLabel", "WEIGHT", V.Enum.ColumnPropertyNames!ReadOnly, False)
+	GUI.FormLabel.gsgcLabel.SetColumnProperty("gvLabel", "COMMENTS", V.Enum.ColumnPropertyNames!ReadOnly, False)
+	
+	'Wrap text
+	GUI.FormLabel.gsgcLabel.SetColumnProperty("gvLabel", "COMMENTS", V.Enum.ColumnPropertyNames!CellWordWrap, "Wrap")
+	
+	'Displaying gv
+	GUI.FormLabel.gsgcLabel.Visible(True)
+	GUI.FormLabel.gsgcLabel.MainView("gvLabel")
+
+F.Intrinsic.Control.Catch
+
+	F.Intrinsic.Control.CallSub(CatchError)
+	
+F.Intrinsic.Control.EndTry
+
+Program.Sub.LoadGrid.End
+Program.Sub.cmdReset_Click.Start
+'This button clears all values from the screen and removes all rows from grid
+F.Intrinsic.Control.Try
+
+	'Default values for textboxes
+	GUI.FormLabel.txtCopies.Text("1")
+	GUI.FormLabel.txtTotal.Text("")
+	
+	'Reset combo box
+	GUI.FormLabel.cboOptions.Text("")
+	
+	'Reset gv
+	GUI.FormLabel.gsgcLabel.Visible(False)
+
+F.Intrinsic.Control.Catch
+
+	F.Intrinsic.Control.CallSub(CatchError)
+	
+F.Intrinsic.Control.EndTry
+
+Program.Sub.cmdReset_Click.End
+Program.Sub.cmdPrint_Click.Start
+'This button creates a CS label with all fields from the grid and additional WO information
+F.Intrinsic.Control.Try
+
+	V.Local.iReportID.Declare(Long) 
+	V.Local.iBIRunID.Declare(Long)
+	V.Local.iBILogID.Declare(Long)
+	V.Local.iCounter.Declare(Long)
+	V.Local.sSQL.Declare(String)
+	
+	F.Intrinsic.Control.For(V.Local.iCounter, 0, V.DataTable.dtLabel.RowCount--, 1)
+		
+		'This needs to be called just once because it's the same data for all records
+		F.Intrinsic.Control.If(V.Local.iCounter, =, 0)
+			F.Intrinsic.Control.CallSub("GetData")
+		F.Intrinsic.Control.EndIf
+		
+		F.Intrinsic.Control.CallSub("UniqueData")
+		
+		'Setting values in dtLabel
+		F.Data.DataTable.SetValue("dtLabel", V.Local.iCounter, "WO", V.DataTable.dtWO(V.Global.iMainCounter).WO!FieldValTrim)
+		F.Data.DataTable.SetValue("dtLabel", V.Local.iCounter, "CUSTOMER_NAME", V.Global.sCustName)
+		F.Data.DataTable.SetValue("dtLabel", V.Local.iCounter, "CUSTOMER_PO", V.Global.sCustPO)
+		F.Data.DataTable.SetValue("dtLabel", V.Local.iCounter, "CUSTOMER_PART", V.Args.CUSTPART)
+		F.Data.DataTable.SetValue("dtLabel", V.Local.iCounter, "FLEX_SCHEDULE", V.Args.RUNID)
+		F.Data.DataTable.SetValue("dtLabel", V.Local.iCounter, "LABEL_COPY", V.Screen.FormLabel!txtCopies.Text)
+	
+	F.Intrinsic.Control.Next(V.Local.iCounter)
+	
+	'Running report functions
+	F.Global.BI.InitializeReport("", "GCG_6485.lab", V.Local.iReportID) 
+	F.Global.BI.GetRunID(V.Local.iBIRunID)
+	F.Global.BI.StartLogging(V.Local.iBIRunID, V.Local.iReportID, -1, "", V.Local.iBILogID)
+	F.Global.BI.StopLogging(V.Local.iBILogID)
+	F.Global.BI.PrintCodesoftLabelFromDataTable(v.Local.iBIRunID,V.Local.iBILogID,"dtLabel","", True)
+		
+	'Reset form for next WO if more than one WO was selected
+	F.Intrinsic.Control.If(V.DataTable.dtWO.RowCount--, >, 0)
+	
+		'Clear out screen and go to next WO
+		F.Intrinsic.Control.CallSub("cmdReset_Click")
+		F.Intrinsic.Control.If(V.Global.iMainCounter, <>, V.DataTable.dtWO.RowCount--)
+			
+			F.Intrinsic.Math.Add(V.Global.iMainCounter, 1, V.Global.iMainCounter)
+			GUI.FormLabel.txtWO.Text(V.DataTable.dtWO(V.Global.iMainCounter).WO!FieldValTrim)
+		
+		F.Intrinsic.Control.Else
+		
+			'Blank screen out and clear values after process ran successfully
+			F.Intrinsic.Control.CallSub("cmdReset_Click")
+			
+		F.Intrinsic.Control.EndIf
+	
+	F.Intrinsic.Control.Else
+	
+		'Blank screen out and clear values after process ran successfully
+		F.Intrinsic.Control.CallSub("cmdReset_Click")
+		
+	F.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.Catch
+
+	F.Intrinsic.Control.CallSub(CatchError)
+	
+F.Intrinsic.Control.EndTry
+
+Program.Sub.cmdPrint_Click.End
+Program.Sub.cmdCancel_Click.Start
+'This button closes the screen with no further action
+F.Intrinsic.Control.Try
+
+	F.Intrinsic.Control.CallSub("FormLabel_UnLoad")
+
+F.Intrinsic.Control.Catch
+
+	F.Intrinsic.Control.CallSub(CatchError)
+	
+F.Intrinsic.Control.EndTry
+
+Program.Sub.cmdCancel_Click.End
+Program.Sub.FormLabel_UnLoad.Start
+GUI.FormLabel..Visible(False)
+F.Intrinsic.Control.End
+
+Program.Sub.FormLabel_UnLoad.End
+Program.Sub.GetWO.Start
+'Getting data from selected WO in GUI's gv
+F.Intrinsic.Control.Try
+
+	V.Local.iRowCount.Declare(Long)
+	V.Local.iCounter.Declare(Long)
+	V.Local.sTemp.Declare(String)
+	V.Local.sWO.Declare(String)
+	
+	'Creating dt
+	F.Intrinsic.Control.If(v.DataTable.dtWO.Exists)
+		F.Data.Datatable.Close("dtWO")
+	F.Intrinsic.Control.EndIf
+	F.Data.DataTable.Create("dtWO", True)
+	
+	'Adding columns to dt
+	F.Data.DataTable.AddColumn("dtWO", "WO", "String")
+	F.Data.DataTable.AddColumn("dtWO", "JOB", "String")
+	F.Data.DataTable.AddColumn("dtWO", "SUFFIX", "String")
+	F.Data.DataTable.AddColumn("dtWO", "SEQ", "String")
+	F.Data.DataTable.AddColumn("dtWO", "PART", "String")
+	
+	'Loading BDF
+	F.Intrinsic.BDF.Load("GAB-BDF", "AUX001")
+	F.Intrinsic.BDF.ReadRowCount("GAB-BDF", V.Local.iRowCount)
+	'Subtracting 1 to V.Local.iRowCount since For-loop considers 0 index
+	F.Intrinsic.Math.Sub(V.Local.iRowCount, 1, V.Local.iRowCount)
+	
+	F.Intrinsic.Control.For(V.Local.iCounter, 0, V.Local.iRowCount, 1)
+	
+		F.Intrinsic.BDF.ReadRow("GAB-BDF", V.Local.iCounter, V.Local.sTemp)
+		F.Intrinsic.String.Split(V.Local.sTemp, "|~|", V.Local.sTemp)
+		
+		'If record was selected then add to dtWO
+		F.Intrinsic.Control.If(V.Local.sTemp(9), =, "Y")
+			
+			F.Intrinsic.String.Split(V.Local.sTemp(0), "-", V.Local.sWO)
+			F.Data.DataTable.AddRow("dtWO", "WO", V.Local.sTemp(0), "JOB", V.Local.sWO(0), "SUFFIX", V.Local.sWO(1), "SEQ", V.Local.sTemp(1), "PART", V.Local.sTemp(4)) 
+		
+		F.Intrinsic.Control.EndIf
+	F.Intrinsic.Control.Next(V.Local.iCounter)
+	
+	''Setting form controls
+	
+	'Setting options for combo box
+	GUI.FormLabel.cboOptions.AddItem("Number of Pallets", 1)
+	GUI.FormLabel.cboOptions.AddItem("Number of Boxes", 2)
+	GUI.FormLabel.cboOptions.AddItem("Number of ", 3)
+	
+	'Dafault copies' textbox to 1
+	GUI.FormLabel.txtCopies.Text("1")
+	
+	'First WO being processed
+	GUI.FormLabel.txtWO.Text(V.DataTable.dtWO(V.Global.iMainCounter).WO!FieldValTrim)
+	
+	'Showing form
+	GUI.FormLabel.gsgcLabel.Visible(False)
+	GUI.FormLabel..Show
+
+F.Intrinsic.Control.Catch
+
+	F.Intrinsic.Control.CallSub(CatchError)
+	
+F.Intrinsic.Control.EndTry
+
+Program.Sub.GetWO.End
+Program.Sub.GetData.Start
+'Getting more data
+F.Intrinsic.Control.Try
+
+	V.Local.sSQL.Declare(String)
+	V.Local.iCounter.Declare(Long)
+
+	F.ODBC.Connection!Con.OpenCompanyConnection
+	
+	'Getting customer PO and customer
+	F.Intrinsic.String.Build("select RTRIM(CUSTOMER) CUSTOMER, RTRIM(CUSTOMER_PO) CUSTOMER_PO from V_JOB_HEADER where JOB = '{0}' and SUFFIX = '{1}';", V.DataTable.dtWO(V.Global.iMainCounter).JOB!FieldValTrim, V.DataTable.dtWO(V.Global.iMainCounter).SUFFIX!FieldValTrim, V.Local.sSQL)
+	F.ODBC.Connection!Con.ExecuteAndReturn(V.Local.sSQL, V.Local.sSQL)
+	
+	F.Intrinsic.String.Split(V.Local.sSQL, "*!*", V.Local.sSQL)
+	V.Global.sCustName.Set(V.Local.sSQL(0))
+	V.Global.sCustomerNumber.Set(V.Local.sSQL(0))
+	V.Global.sCustPO.Set(V.Local.sSQL(1))
+	
+	'Getting customer name
+	F.Intrinsic.String.Build("select RTRIM(NAME_CUSTOMER) NAME_CUSTOMER from V_CUSTOMER_MASTER where CUSTOMER = '{0}';", V.Global.sCustName, V.Local.sSQL)
+	F.ODBC.Connection!Con.ExecuteAndReturn(V.Local.sSQL, V.Global.sCustName)
+	
+	F.ODBC.Connection!Con.Close
+
+F.Intrinsic.Control.Catch
+
+	F.Intrinsic.Control.CallSub(CatchError)
+	
+F.Intrinsic.Control.EndTry
+
+Program.Sub.GetData.End
+Program.Sub.gsgcLabel_CellValueChanged.Start
+'To update dt from modify cells in gv
+F.Intrinsic.Control.Try
+
+	F.Data.DataTable.SetValue("dtLabel", V.Args.RowIndex, V.Args.Column, V.Args.Value)
+
+F.Intrinsic.Control.Catch
+
+	F.Intrinsic.Control.CallSub(CatchError)
+	
+F.Intrinsic.Control.EndTry
+
+Program.Sub.gsgcLabel_CellValueChanged.End
+Program.Sub.CatchError.Start
+F.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}", V.Ambient.ScriptPath, V.Ambient.Newline, V.Ambient.SubroutineCalledFrom, V.Ambient.ErrorNumber, V.Ambient.ErrorDescription, V.Ambient.GABVersion, V.Global.sError) 
+F.Intrinsic.UI.Msgbox(V.Global.sError)
+F.Intrinsic.Control.End
+Program.Sub.CatchError.End
+Program.Sub.UniqueData.Start
+F.Intrinsic.Control.Try
+
+	V.Local.sSQL.Declare(String)
+	V.Local.sRunID.Declare(String)
+	V.Local.sCustomerPart.Declare(String)
+	
+	F.ODBC.Connection!Con.OpenCompanyConnection
+	
+	'Customer Part number
+	F.Intrinsic.String.Build("select RTRIM(CUSTOMER_PART) CUSTOMER_PART from V_INV_CROSS_REF where PART = '{0}' and CUSTOMER = '{1}';", V.DataTable.dtWO(V.Global.iMainCounter).PART!FieldValTrim, V.Global.sCustomerNumber, V.Local.sSQL)
+	F.ODBC.Connection!Con.ExecuteAndReturn(V.Local.sSQL, V.Local.sCustomerPart)
+	
+	'Flex schedule
+	F.Intrinsic.String.Build("select RTRIM(SCHEDULE) SCHEDULE from OYB_FLX_SCHD_HIST where JOB = '{0}' and SUFFIX = '{1}' and LABOR_SEQ = '{2}';", V.DataTable.dtWO(V.Global.iMainCounter).JOB!FieldValTrim, V.DataTable.dtWO(V.Global.iMainCounter).SUFFIX!FieldValTrim, V.DataTable.dtWO(V.Global.iMainCounter).SEQ!FieldValTrim, V.Local.sSQL)
+	F.ODBC.Connection!Con.ExecuteAndReturn(V.Local.sSQL, V.Local.sRunID)
+	
+	F.Intrinsic.Variable.AddRV("RUNID", V.Local.sRunID)
+	F.Intrinsic.Variable.AddRV("CUSTPART", V.Local.sCustomerPart)
+	
+	F.ODBC.Connection!Con.Close
+
+F.Intrinsic.Control.Catch
+
+	F.Intrinsic.Control.CallSub(CatchError)
+	
+F.Intrinsic.Control.EndTry
+Program.Sub.UniqueData.End
+Program.Sub.IndividualWO.Start
+'Getting data from selected WO
+F.Intrinsic.Control.Try
+
+	V.Local.sWO.Declare(String)
+	V.Local.sSQL.Declare(String)
+	V.Local.sPart.Declare(String)
+	
+	'Creating dt
+	F.Intrinsic.Control.If(V.DataTable.dtWO.Exists)
+		F.Data.Datatable.Close("dtWO")
+	F.Intrinsic.Control.EndIf
+	F.Data.DataTable.Create("dtWO", True)
+	
+	'Adding columns to dt
+	F.Data.DataTable.AddColumn("dtWO", "WO", "String")
+	F.Data.DataTable.AddColumn("dtWO", "JOB", "String")
+	F.Data.DataTable.AddColumn("dtWO", "SUFFIX", "String")
+	F.Data.DataTable.AddColumn("dtWO", "SEQ", "String")
+	F.Data.DataTable.AddColumn("dtWO", "PART", "String")
+	
+	'Setting row
+	F.Intrinsic.String.Build("{0}-{1}", V.Passed.009990, V.Passed.009991, V.Local.sWO)
+	F.ODBC.Connection!Con.OpenCompanyConnection
+	F.Intrinsic.String.Build("select RTRIM(PART) PART from V_JOB_HEADER where JOB = '{0}' and SUFFIX = '{1}';", V.Passed.009990, V.Passed.009991, V.Local.sSQL)
+	F.ODBC.Connection!Con.ExecuteAndReturn(V.Local.sSQL, V.Local.sPart)
+	F.ODBC.Connection!Con.Close
+	
+	F.Data.DataTable.AddRow("dtWO", "WO", V.Local.sWO, "JOB", V.Passed.009990, "SUFFIX", V.Passed.009991, "SEQ", V.Passed.009992, "PART", V.Local.sPart) 
+		
+	''Setting form controls
+	
+	'Setting options for combo box
+	GUI.FormLabel.cboOptions.AddItem("Number of Pallets", 1)
+	GUI.FormLabel.cboOptions.AddItem("Number of Boxes", 2)
+	GUI.FormLabel.cboOptions.AddItem("Number of ", 3)
+	
+	'Dafault copies' textbox to 1
+	GUI.FormLabel.txtCopies.Text("1")
+	
+	'First WO being processed
+	GUI.FormLabel.txtWO.Text(V.DataTable.dtWO(0).WO!FieldValTrim)
+	
+	'Showing form
+	GUI.FormLabel.gsgcLabel.Visible(False)
+	GUI.FormLabel..Show
+
+F.Intrinsic.Control.Catch
+
+	F.Intrinsic.Control.CallSub(CatchError)
+	
+F.Intrinsic.Control.EndTry
+Program.Sub.IndividualWO.End
+
+Program.Sub.Comments.Start
+${$5$}$3.0.0.0$}$1
+${$6$}$apadilla$}$20211027132610572$}$Lag9STqBJOmNXSbd5+msRcBWPGz0aFqSwHruISZ+s7xc6TWrn07HAQeIePgpkxST/ecghjkSuacCh0umTqOUDA==
+Program.Sub.Comments.End
